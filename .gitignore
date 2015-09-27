@@ -1,0 +1,7 @@
+# IntelliJ project files
+.idea
+monsterchess.iml
+
+# Gradle and build artifacts
+.gradle
+build
