@@ -19,49 +19,34 @@ public class King extends Piece {
 		List<Move> moves = new LinkedList<>();
 
 		// Try to move down
-		if (square.getRank() > 0) {
-			Square down = new Square(square.getRank() - 1, square.getFile());
+		Square down = square.getDown();
+		if (square.isOnBoard()) {
 			addMoveOrCapture(down, moves);
 
 			// Down and left
-			if (square.getFile() > 0) {
-				Square downLeft = new Square(square.getRank() - 1, square.getFile() - 1);
-				addMoveOrCapture(downLeft, moves);
-			}
+			addMoveOrCapture(down.getLeft(), moves);
+
 			// Down and right
-			if (square.getFile() < 7) {
-				Square downRight = new Square(square.getRank() - 1, square.getFile() + 1);
-				addMoveOrCapture(downRight, moves);
-			}
+			addMoveOrCapture(down.getRight(), moves);
 		}
+
 		// Try to move up
-		if (square.getRank() < 7) {
-			Square down = new Square(square.getRank() + 1, square.getFile());
-			addMoveOrCapture(down, moves);
+		Square up = square.getUp();
+		if (up.isOnBoard()) {
+			addMoveOrCapture(up, moves);
 
 			// Up and left
-			if (square.getFile() > 0) {
-				Square upLeft = new Square(square.getRank() + 1, square.getFile() - 1);
-				addMoveOrCapture(upLeft, moves);
-			}
+			addMoveOrCapture(up.getLeft(), moves);
+
 			// Up and right
-			if (square.getFile() < 7) {
-				Square upRight = new Square(square.getRank() + 1, square.getFile() + 1);
-				addMoveOrCapture(upRight, moves);
-			}
+			addMoveOrCapture(up.getRight(), moves);
 		}
 
 		// Directly left
-		if (square.getFile() > 0) {
-			Square left = new Square(square.getRank(), square.getFile() - 1);
-			addMoveOrCapture(left, moves);
-		}
+		addMoveOrCapture(square.getLeft(), moves);
 
 		// Directly right
-		if (square.getFile() < 7) {
-			Square right = new Square(square.getRank(), square.getFile() + 1);
-			addMoveOrCapture(right, moves);
-		}
+		addMoveOrCapture(square.getRight(), moves);
 
 		return moves;
 	}
