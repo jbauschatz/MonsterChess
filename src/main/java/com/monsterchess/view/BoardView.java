@@ -3,6 +3,7 @@ package com.monsterchess.view;
 
 import com.monsterchess.model.MonsterChess;
 import com.monsterchess.model.Square;
+import com.monsterchess.model.event.ChessEvent;
 import com.monsterchess.model.move.Move;
 import com.monsterchess.model.piece.Piece;
 
@@ -17,14 +18,10 @@ public class BoardView extends JPanel {
 
 	private static final int SQUARE_WIDTH = 30;
 
-	public void refreshPieces() {
-		game.getSquares().forEach(s ->
-			squares[s.getRank()][s.getFile()].showPiece(game.getPiece(s))
-		);
-	}
-
 	public BoardView(MonsterChess game) {
 		this.game = game;
+		setPreferredSize(new Dimension(SQUARE_WIDTH * 8, SQUARE_WIDTH * 8));
+
 		squares = new SquareButton[8][8];
 
 		setLayout(new GridLayout(8, 8));
@@ -41,7 +38,7 @@ public class BoardView extends JPanel {
 		}
 
 		game.addListener(this::refreshPieces);
-		refreshPieces();
+		refreshPieces(null);
 	}
 
 	private void squareClicked(SquareButton button) {
@@ -73,6 +70,12 @@ public class BoardView extends JPanel {
 			activePiece = null;
 			activeSquare = null;
 		}
+	}
+
+	private void refreshPieces(ChessEvent event) {
+		game.getSquares().forEach(s ->
+				squares[s.getRank()][s.getFile()].showPiece(game.getPiece(s))
+		);
 	}
 
 	private MonsterChess game;

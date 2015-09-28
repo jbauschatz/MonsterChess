@@ -51,7 +51,6 @@ public class Pawn extends Piece {
 			}
 		}
 
-
 		// TODO add En Passant
 
 		return moves;

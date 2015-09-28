@@ -1,6 +1,9 @@
 
 package com.monsterchess.model;
 
+import com.monsterchess.model.event.ChessEvent;
+import com.monsterchess.model.event.ChessEventListener;
+import com.monsterchess.model.event.MoveEvent;
 import com.monsterchess.model.move.BasicMove;
 import com.monsterchess.model.move.Move;
 import com.monsterchess.model.piece.*;
@@ -62,8 +65,9 @@ public class MonsterChess {
 		cacheLegalMoves();
 
 		// Notify listeners
+		ChessEvent moveEvent = new MoveEvent(move, movesMade);
 		for (ChessEventListener listener : listeners)
-			listener.processEvent();
+			listener.processEvent(moveEvent);
 	}
 
 	public void movePiece(Piece piece, Square square) {
