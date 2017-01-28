@@ -37,6 +37,10 @@ public class BasicMove implements Move {
 		return to;
 	}
 
+	public Square getFrom() {
+		return from;
+	}
+
 	public Piece getMovingPiece() {
 		return mover;
 	}

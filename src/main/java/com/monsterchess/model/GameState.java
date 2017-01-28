@@ -1,6 +1,8 @@
 
 package com.monsterchess.model;
 
+import com.monsterchess.model.move.BasicMove;
+import com.monsterchess.model.move.Capture;
 import com.monsterchess.model.move.Move;
 import com.monsterchess.model.piece.*;
 
@@ -57,6 +59,10 @@ public class GameState {
 		return playerToMove;
 	}
 
+	public int getMoveNumber() {
+		return movesMade;
+	}
+
 	/**
 	 * The piece on the board at the given square
 	 */
@@ -89,7 +95,7 @@ public class GameState {
 	}
 
 	public GameState makeMove(Move move) {
-		return this;
+		return new GameState(this, move);
 	}
 
 	/**
@@ -112,6 +118,45 @@ public class GameState {
 		piecePositions = new HashMap<>();
 		movesMade = 0;
 		playerToMove = Player.WHITE;
+
+		cacheThreatenedMoves();
+	}
+
+	private GameState(GameState parent, Move move) {
+		// Directly copy state from parent
+		board = new Piece[8][8];
+		for (int rank = 0; rank<8; ++rank) {
+			for (int file = 0; file<8; ++file) {
+				board[rank][file] = parent.board[rank][file];
+			}
+		}
+		piecePositions = new HashMap<>(parent.piecePositions);
+
+		// Derive state specific to this position
+		movesMade = parent.movesMade + 1;
+		playerToMove = movesMade % 3 == 2 ? Player.BLACK : Player.WHITE;
+
+		// Execute the side effects of the originating move
+		if (move instanceof BasicMove) {
+			BasicMove basicMove = (BasicMove)move;
+			piecePositions.put(move.getMovingPiece(), move.getOperativeSquare());
+			board[basicMove.getFrom().getRank()][basicMove.getFrom().getFile()] = null;
+			board[basicMove.getOperativeSquare().getRank()][basicMove.getOperativeSquare().getFile()] = basicMove.getMovingPiece();
+
+			pieces = parent.pieces;
+		} else if (move instanceof Capture) {
+			Capture capture = (Capture)move;
+
+			// Move the moving piece
+			piecePositions.put(move.getMovingPiece(), move.getOperativeSquare());
+			board[capture.getFrom().getRank()][capture.getFrom().getFile()] = null;
+			board[capture.getOperativeSquare().getRank()][capture.getOperativeSquare().getFile()] = capture.getMovingPiece();
+
+			// Remove the captured piece
+			piecePositions.remove(capture.getCapturedPiece());
+			pieces = new LinkedList<>(parent.pieces);
+			pieces.remove(capture.getCapturedPiece());
+		}
 
 		cacheThreatenedMoves();
 	}

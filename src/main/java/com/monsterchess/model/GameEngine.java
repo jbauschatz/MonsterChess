@@ -6,9 +6,11 @@
  ****************************************************************/
 package com.monsterchess.model;
 
+import com.monsterchess.model.event.ChessEvent;
 import com.monsterchess.model.event.ChessEventListener;
+import com.monsterchess.model.event.MoveEvent;
 import com.monsterchess.model.move.Move;
-import com.monsterchess.model.piece.Piece;
+import com.monsterchess.player.GamePlayer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,15 +20,18 @@ import java.util.List;
  */
 public class GameEngine {
 
+	public List<Move> getLegalMoves(Player player) {
+		if (player != currentState.getPlayerToMove()) {
+			return new LinkedList<>();
+		}
+
+		// TODO validate each of these based on the rules of Check, etc
+		return currentState.getThreatenedMoves();
+	}
+
 	public void newGame() {
 		currentState = GameState.createInitialState();
-		notifyListeners();
-
-		System.out.print("Threatened moves: ");
-		for (Move move : currentState.getThreatenedMoves()) {
-			System.out.print(move + " ");
-		}
-		System.out.println();
+		notifyListeners(null);
 	}
 
 	public GameState getCurrentState() {
@@ -37,17 +42,51 @@ public class GameEngine {
 		listeners.add(listener);
 	}
 
-	public GameEngine() {
+	public void playGame() {
+		while (true) {
+			// TODO - Calculate and cache legal moves for the current player
+
+			// Debugging - write legal moves to the console
+			System.out.print("Threatened moves: ");
+			for (Move move : currentState.getThreatenedMoves()) {
+				System.out.print(move + " ");
+			}
+			System.out.println();
+
+			// TODO - evaluate Check or Checkmate
+
+			GamePlayer player = currentState.getPlayerToMove() == Player.WHITE
+					? whitePlayer
+					: blackPlayer;
+			Move move = player.getMove(this, currentState.getPlayerToMove());
+			System.out.println(player.getName() + " chose: " + move);
+
+			// TODO validate the move
+			makeMove(move);
+			notifyListeners(new MoveEvent(move, currentState.getMoveNumber()));
+		}
+	}
+
+	public GameEngine(GamePlayer whitePlayer, GamePlayer blackPlayer) {
+		this.whitePlayer = whitePlayer;
+		this.blackPlayer = blackPlayer;
+
 		listeners = new LinkedList<>();
 
 		newGame();
 	}
 
-	private void notifyListeners() {
+	private void makeMove(Move move) {
+		currentState = currentState.makeMove(move);
+	}
+
+	private void notifyListeners(ChessEvent event) {
 		for (ChessEventListener listener : listeners)
-			listener.processEvent(null);
+			listener.processEvent(event);
 	}
 
 	private GameState currentState;
 	private List<ChessEventListener> listeners;
+	private GamePlayer whitePlayer;
+	private GamePlayer blackPlayer;
 }

@@ -51,9 +51,9 @@ public class BoardView extends JPanel {
 	private void refreshPieces(ChessEvent event) {
 		GameState state = engine.getCurrentState();
 
-		state.getSquares().forEach(s ->
-				squares[s.getRank()][s.getFile()].showPiece(state.getPiece(s))
-		);
+		SwingUtilities.invokeLater(() -> {
+				state.getSquares().forEach(s -> squares[s.getRank()][s.getFile()].showPiece(state.getPiece(s)));
+		});
 	}
 
 	private GameEngine engine;

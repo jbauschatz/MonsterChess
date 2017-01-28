@@ -2,6 +2,7 @@
 package com.monsterchess.view;
 
 import com.monsterchess.model.GameEngine;
+import com.monsterchess.player.RandomAI;
 
 /**
  *
@@ -9,7 +10,9 @@ import com.monsterchess.model.GameEngine;
 public class Main {
 
 	public static void main(String[] args) {
-		GameEngine engine = new GameEngine();
+		GameEngine engine = new GameEngine(new RandomAI(), new RandomAI());
 		new GameWindow(engine);
+
+		engine.playGame();
 	}
 }

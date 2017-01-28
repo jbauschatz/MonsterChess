@@ -38,8 +38,16 @@ public class Capture implements Move {
 		return to;
 	}
 
+	public Square getFrom() {
+		return from;
+	}
+
 	public Piece getMovingPiece() {
 		return mover;
+	}
+
+	public Piece getCapturedPiece() {
+		return captured;
 	}
 
 	public Capture(Piece mover, Piece captured, Square from, Square to) {

@@ -56,24 +56,26 @@ public class GameHistory extends JPanel {
 	}
 
 	private void processEvent(ChessEvent event) {
-		if (event instanceof MoveEvent) {
-			MoveEvent moveEvent = (MoveEvent)event;
+		SwingUtilities.invokeLater(() ->{
+			if (event instanceof MoveEvent) {
+				MoveEvent moveEvent = (MoveEvent)event;
 
-			int moveNum = moveEvent.getMoveNumber() % 3;
-			if (moveNum == 1) {
-				latestTurn.whiteFirstMove = moveEvent.getMove();
-				turnsView.repaint();
-			} else if (moveNum == 2) {
-				latestTurn.whiteSecondMove = moveEvent.getMove();
-				turnsView.repaint();
-			} else {
-				latestTurn.blackMove = moveEvent.getMove();
-				latestTurn = new Turn();
-				++numTurns;
-				latestTurn.turnNumber = numTurns;
-				turns.addElement(latestTurn);
+				int moveNum = moveEvent.getMoveNumber() % 3;
+				if (moveNum == 1) {
+					latestTurn.whiteFirstMove = moveEvent.getMove();
+					turnsView.repaint();
+				} else if (moveNum == 2) {
+					latestTurn.whiteSecondMove = moveEvent.getMove();
+					turnsView.repaint();
+				} else {
+					latestTurn.blackMove = moveEvent.getMove();
+					latestTurn = new Turn();
+					++numTurns;
+					latestTurn.turnNumber = numTurns;
+					turns.addElement(latestTurn);
+				}
 			}
-		}
+		});
 	}
 
 	private class Turn {
