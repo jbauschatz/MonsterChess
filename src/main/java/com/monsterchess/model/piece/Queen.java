@@ -1,7 +1,7 @@
 
 package com.monsterchess.model.piece;
 
-import com.monsterchess.model.MonsterChess;
+import com.monsterchess.model.GameState;
 import com.monsterchess.model.Player;
 import com.monsterchess.model.Square;
 import com.monsterchess.model.move.Move;
@@ -14,26 +14,26 @@ import java.util.List;
  */
 public class Queen extends Piece {
 
-	public List<Move> getThreatenedMoves() {
+	public List<Move> getThreatenedMoves(Square currentPosition, GameState gameState) {
 		List<Move> moves = new LinkedList<>();
 
 		// Orthogonal moves
-		addMovesUntilBlocking(moves, Square::getLeft);
-		addMovesUntilBlocking(moves, Square::getRight);
-		addMovesUntilBlocking(moves, Square::getUp);
-		addMovesUntilBlocking(moves, Square::getDown);
+		tryMoveOrCaptureUntilBlocking(moves, currentPosition, Square::getLeft, gameState);
+		tryMoveOrCaptureUntilBlocking(moves, currentPosition, Square::getRight, gameState);
+		tryMoveOrCaptureUntilBlocking(moves, currentPosition, Square::getUp, gameState);
+		tryMoveOrCaptureUntilBlocking(moves, currentPosition, Square::getDown, gameState);
 
 		// Diagonal moves
-		addMovesUntilBlocking(moves, s -> s.getUp().getLeft());
-		addMovesUntilBlocking(moves, s -> s.getUp().getRight());
-		addMovesUntilBlocking(moves, s -> s.getDown().getLeft());
-		addMovesUntilBlocking(moves, s -> s.getDown().getRight());
+		tryMoveOrCaptureUntilBlocking(moves, currentPosition, s -> s.getUp().getLeft(), gameState);
+		tryMoveOrCaptureUntilBlocking(moves, currentPosition, s -> s.getUp().getRight(), gameState);
+		tryMoveOrCaptureUntilBlocking(moves, currentPosition, s -> s.getDown().getLeft(), gameState);
+		tryMoveOrCaptureUntilBlocking(moves, currentPosition, s -> s.getDown().getRight(), gameState);
 
 		return moves;
 	}
 
-	public Queen(MonsterChess game, Player player, Square startingPosition) {
-		super("Q", game, player, startingPosition);
+	public Queen(Player player) {
+		super("Q", player);
 	}
 
 }

@@ -1,7 +1,7 @@
 
 package com.monsterchess.model.piece;
 
-import com.monsterchess.model.MonsterChess;
+import com.monsterchess.model.GameState;
 import com.monsterchess.model.Player;
 import com.monsterchess.model.Square;
 import com.monsterchess.model.move.Move;
@@ -14,44 +14,35 @@ import java.util.List;
  */
 public class King extends Piece {
 
-	@Override
-	public List<Move> getThreatenedMoves() {
-		List<Move> moves = new LinkedList<>();
+	public List<Move> getThreatenedMoves(Square currentPosition, GameState gameState) {
+		LinkedList<Move> moves = new LinkedList<>();
 
-		// Try to move down
-		Square down = square.getDown();
-		if (square.isOnBoard()) {
-			addMoveOrCapture(down, moves);
+		// Directly down
+		Square down = currentPosition.getDown();
+		tryMoveOrCapture(moves, currentPosition, down, gameState);
 
-			// Down and left
-			addMoveOrCapture(down.getLeft(), moves);
+		// Diagonally down
+		tryMoveOrCapture(moves, currentPosition, down.getLeft(), gameState);
+		tryMoveOrCapture(moves, currentPosition, down.getRight(), gameState);
 
-			// Down and right
-			addMoveOrCapture(down.getRight(), moves);
-		}
+		// Directly up
+		Square up = currentPosition.getUp();
+		tryMoveOrCapture(moves, currentPosition, up, gameState);
 
-		// Try to move up
-		Square up = square.getUp();
-		if (up.isOnBoard()) {
-			addMoveOrCapture(up, moves);
-
-			// Up and left
-			addMoveOrCapture(up.getLeft(), moves);
-
-			// Up and right
-			addMoveOrCapture(up.getRight(), moves);
-		}
+		// Diagonally up
+		tryMoveOrCapture(moves, currentPosition, up.getLeft(), gameState);
+		tryMoveOrCapture(moves, currentPosition, up.getRight(), gameState);
 
 		// Directly left
-		addMoveOrCapture(square.getLeft(), moves);
+		tryMoveOrCapture(moves, currentPosition, currentPosition.getLeft(), gameState);
 
 		// Directly right
-		addMoveOrCapture(square.getRight(), moves);
+		tryMoveOrCapture(moves, currentPosition, currentPosition.getRight(), gameState);
 
 		return moves;
 	}
 
-	public King(MonsterChess game, Player player, Square startingPosition) {
-		super("K", game, player, startingPosition);
+	public King(Player player) {
+		super("K", player);
 	}
 }

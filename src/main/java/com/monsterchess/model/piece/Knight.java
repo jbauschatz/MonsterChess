@@ -1,7 +1,7 @@
 
 package com.monsterchess.model.piece;
 
-import com.monsterchess.model.MonsterChess;
+import com.monsterchess.model.GameState;
 import com.monsterchess.model.Player;
 import com.monsterchess.model.Square;
 import com.monsterchess.model.move.Move;
@@ -14,23 +14,23 @@ import java.util.List;
  */
 public class Knight extends Piece {
 
-	public List<Move> getThreatenedMoves() {
+	public List<Move> getThreatenedMoves(Square currentPosition, GameState gameState) {
 		List<Move> moves = new LinkedList<>();
 
-		addMoveOrCapture(square.getUp().getUp().getRight(), moves);
-		addMoveOrCapture(square.getUp().getUp().getLeft(), moves);
-		addMoveOrCapture(square.getUp().getRight().getRight(), moves);
-		addMoveOrCapture(square.getUp().getLeft().getLeft(), moves);
+		tryMoveOrCapture(moves, currentPosition, currentPosition.getUp().getUp().getRight(), gameState);
+		tryMoveOrCapture(moves, currentPosition, currentPosition.getUp().getUp().getLeft(), gameState);
+		tryMoveOrCapture(moves, currentPosition, currentPosition.getUp().getRight().getRight(), gameState);
+		tryMoveOrCapture(moves, currentPosition, currentPosition.getUp().getLeft().getLeft(), gameState);
 
-		addMoveOrCapture(square.getDown().getDown().getRight(), moves);
-		addMoveOrCapture(square.getDown().getDown().getLeft(), moves);
-		addMoveOrCapture(square.getDown().getRight().getRight(), moves);
-		addMoveOrCapture(square.getDown().getLeft().getLeft(), moves);
+		tryMoveOrCapture(moves, currentPosition, currentPosition.getDown().getDown().getRight(), gameState);
+		tryMoveOrCapture(moves, currentPosition, currentPosition.getDown().getDown().getLeft(), gameState);
+		tryMoveOrCapture(moves, currentPosition, currentPosition.getDown().getRight().getRight(), gameState);
+		tryMoveOrCapture(moves, currentPosition, currentPosition.getDown().getLeft().getLeft(), gameState);
 
 		return moves;
 	}
 
-	public Knight(MonsterChess game, Player player, Square startingPosition) {
-		super("N", game, player, startingPosition);
+	public Knight(Player player) {
+		super("N", player);
 	}
 }
