@@ -52,6 +52,16 @@ public class GameState {
 		return state;
 	}
 
+	public Stream<Piece> getPieces(Player player, Piece.Type type) {
+		return pieces.stream()
+				.filter(p -> p.getPlayer() == player && p.getType() == type);
+	}
+
+	public Stream<Piece> getPieces(Player player) {
+		return pieces.stream()
+				.filter(p -> p.getPlayer() == player);
+	}
+
 	/**
 	 * The player whose turn it is in this position
 	 */
@@ -63,11 +73,19 @@ public class GameState {
 		return movesMade;
 	}
 
+	public List<Piece> getPieces() {
+		return pieces;
+	}
+
 	/**
 	 * The piece on the board at the given square
 	 */
 	public Piece getPiece(Square square) {
 		return board[square.getRank()][square.getFile()];
+	}
+
+	public Square getPosition(Piece piece) {
+		return piecePositions.get(piece);
 	}
 
 	/**

@@ -43,6 +43,6 @@ public class King extends Piece {
 	}
 
 	public King(Player player) {
-		super("K", player);
+		super(Type.KING, "K", player);
 	}
 }

@@ -16,6 +16,15 @@ import java.util.function.Function;
  */
 public abstract class Piece {
 
+	public enum Type {
+		KING,
+		QUEEN,
+		ROOK,
+		BISHOP,
+		KNIGHT,
+		PAWN;
+	}
+
 	/**
 	 * Moves that this piece "threatens" to make
 	 *
@@ -23,6 +32,10 @@ public abstract class Piece {
 	 * These moves represent the intrinsic movement and capture rules of the piece.
 	 */
 	public abstract List<Move> getThreatenedMoves(Square currentPosition, GameState gameState);
+
+	public Type getType() {
+		return type;
+	}
 
 	public String getShorthand() {
 		return shorthand;
@@ -64,11 +77,13 @@ public abstract class Piece {
 		}
 	}
 
-	protected Piece(String shorthand, Player player) {
+	protected Piece(Type type, String shorthand, Player player) {
+		this.type = type;
 		this.shorthand = shorthand;
 		this.player = player;
 	}
 
 	protected final Player player;
+	protected Type type;
 	private final String shorthand;
 }

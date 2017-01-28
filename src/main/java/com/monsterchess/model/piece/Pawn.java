@@ -25,6 +25,10 @@ public class Pawn extends Piece {
 
 		// Try to move one space
 		Square oneMove = new Square(moveRank, currentPosition.getFile());
+		if (!oneMove.isOnBoard()) {
+			return moves;
+		}
+
 		if (gameState.isEmpty(oneMove)) {
 			moves.add(new BasicMove(this, currentPosition, oneMove));
 
@@ -65,6 +69,6 @@ public class Pawn extends Piece {
 	}
 
 	public Pawn(Player player) {
-		super("P", player);
+		super(Type.PAWN, "P", player);
 	}
 }

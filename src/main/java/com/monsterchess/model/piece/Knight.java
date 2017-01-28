@@ -31,6 +31,6 @@ public class Knight extends Piece {
 	}
 
 	public Knight(Player player) {
-		super("N", player);
+		super(Type.KNIGHT, "N", player);
 	}
 }

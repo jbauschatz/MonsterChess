@@ -46,13 +46,6 @@ public class GameEngine {
 		while (true) {
 			// TODO - Calculate and cache legal moves for the current player
 
-			// Debugging - write legal moves to the console
-			System.out.print("Threatened moves: ");
-			for (Move move : currentState.getThreatenedMoves()) {
-				System.out.print(move + " ");
-			}
-			System.out.println();
-
 			// TODO - evaluate Check or Checkmate
 
 			GamePlayer player = currentState.getPlayerToMove() == Player.WHITE

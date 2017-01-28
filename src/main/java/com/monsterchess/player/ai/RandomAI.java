@@ -4,11 +4,12 @@
  * This software is the confidential and proprietary information of
  * Health Innovation Technologies, Inc. ("Confidential Information").
  ****************************************************************/
-package com.monsterchess.player;
+package com.monsterchess.player.ai;
 
 import com.monsterchess.model.GameEngine;
 import com.monsterchess.model.Player;
 import com.monsterchess.model.move.Move;
+import com.monsterchess.player.GamePlayer;
 
 import java.util.List;
 

@@ -26,7 +26,7 @@ public class Bishop extends Piece {
 	}
 
 	public Bishop(Player player) {
-		super("B", player);
+		super(Type.BISHOP, "B", player);
 	}
 
 }

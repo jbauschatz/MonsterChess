@@ -27,7 +27,7 @@ public class Rook extends Piece {
 	}
 
 	public Rook(Player player) {
-		super("R", player);
+		super(Type.ROOK, "R", player);
 	}
 
 }
