@@ -5,3 +5,4 @@ monsterchess.iml
 # Gradle and build artifacts
 .gradle
 build
+out

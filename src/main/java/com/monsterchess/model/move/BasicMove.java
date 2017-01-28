@@ -1,7 +1,6 @@
 
 package com.monsterchess.model.move;
 
-import com.monsterchess.model.MonsterChess;
 import com.monsterchess.model.Square;
 import com.monsterchess.model.piece.Pawn;
 import com.monsterchess.model.piece.Piece;
@@ -38,12 +37,12 @@ public class BasicMove implements Move {
 		return to;
 	}
 
-	public Piece getMovingPiece() {
-		return mover;
+	public Square getFrom() {
+		return from;
 	}
 
-	public void execute(MonsterChess game) {
-		game.movePiece(mover, to);
+	public Piece getMovingPiece() {
+		return mover;
 	}
 
 	public BasicMove(Piece mover, Square from, Square to) {

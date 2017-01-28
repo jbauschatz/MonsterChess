@@ -17,7 +17,8 @@ public class Square {
 			return false;
 
 		Square otherSquare = (Square)other;
-		return rank == otherSquare.rank && file == otherSquare.file;
+		return rank == otherSquare.rank
+				&& file == otherSquare.file;
 	}
 
 	public int getRank() {
@@ -52,6 +53,21 @@ public class Square {
 		return rank >= 0 && rank <= 7 && file >= 0 && file <= 7;
 	}
 
+	/**
+	 * Standard chess notation
+	 * @param file a character 'a' - 'h'
+	 * @param rank a number 1 - 8
+	 */
+	public Square(char file, int rank) {
+		this.rank = rank - 1;
+		this.file = file - 'a';
+
+		notation = file + "" + rank;
+	}
+
+	/**
+	 * 0-indexed, where A1 is 0,0
+	 */
 	public Square(int rank, int file) {
 		this.rank = rank;
 		this.file = file;
