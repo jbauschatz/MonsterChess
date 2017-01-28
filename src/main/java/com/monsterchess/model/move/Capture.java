@@ -1,7 +1,6 @@
 
 package com.monsterchess.model.move;
 
-import com.monsterchess.model.MonsterChess;
 import com.monsterchess.model.Square;
 import com.monsterchess.model.piece.Pawn;
 import com.monsterchess.model.piece.Piece;
@@ -33,10 +32,6 @@ public class Capture implements Move {
 	@Override
 	public int hashCode() {
 		return toString().hashCode();
-	}
-
-	public void execute(MonsterChess game) {
-		game.movePiece(mover, to);
 	}
 
 	public Square getOperativeSquare() {

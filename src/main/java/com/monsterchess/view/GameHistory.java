@@ -1,7 +1,8 @@
 
 package com.monsterchess.view;
 
-import com.monsterchess.model.MonsterChess;
+import com.monsterchess.model.GameEngine;
+import com.monsterchess.model.GameState;
 import com.monsterchess.model.event.ChessEvent;
 import com.monsterchess.model.event.MoveEvent;
 import com.monsterchess.model.move.Move;
@@ -14,9 +15,9 @@ import java.awt.*;
  */
 public class GameHistory extends JPanel {
 
-	public GameHistory(MonsterChess game) {
+	public GameHistory(GameEngine engine) {
 		turns = new DefaultListModel<>();
-		game.addListener(this::processEvent);
+		engine.addListener(this::processEvent);
 
 		setPreferredSize(new Dimension(200, 800));
 

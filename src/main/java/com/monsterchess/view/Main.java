@@ -1,7 +1,7 @@
 
 package com.monsterchess.view;
 
-import com.monsterchess.model.MonsterChess;
+import com.monsterchess.model.GameEngine;
 
 /**
  *
@@ -9,7 +9,7 @@ import com.monsterchess.model.MonsterChess;
 public class Main {
 
 	public static void main(String[] args) {
-		MonsterChess game = new MonsterChess();
-		new GameWindow(game);
+		GameEngine engine = new GameEngine();
+		new GameWindow(engine);
 	}
 }
