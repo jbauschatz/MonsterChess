@@ -15,7 +15,31 @@ import java.util.List;
 public class King extends Piece {
 
 	public List<Move> getThreatenedMoves(Square currentPosition, GameState gameState) {
-		return new LinkedList<>();
+		LinkedList<Move> moves = new LinkedList<>();
+
+		// Directly down
+		Square down = currentPosition.getDown();
+		tryMoveOrCapture(moves, currentPosition, down, gameState);
+
+		// Diagonally down
+		tryMoveOrCapture(moves, currentPosition, down.getLeft(), gameState);
+		tryMoveOrCapture(moves, currentPosition, down.getRight(), gameState);
+
+		// Directly up
+		Square up = currentPosition.getUp();
+		tryMoveOrCapture(moves, currentPosition, up, gameState);
+
+		// Diagonally up
+		tryMoveOrCapture(moves, currentPosition, up.getLeft(), gameState);
+		tryMoveOrCapture(moves, currentPosition, up.getRight(), gameState);
+
+		// Directly left
+		tryMoveOrCapture(moves, currentPosition, currentPosition.getLeft(), gameState);
+
+		// Directly right
+		tryMoveOrCapture(moves, currentPosition, currentPosition.getRight(), gameState);
+
+		return moves;
 	}
 
 	public King(Player player) {

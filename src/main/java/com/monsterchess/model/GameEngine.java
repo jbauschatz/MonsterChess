@@ -7,6 +7,8 @@
 package com.monsterchess.model;
 
 import com.monsterchess.model.event.ChessEventListener;
+import com.monsterchess.model.move.Move;
+import com.monsterchess.model.piece.Piece;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +21,12 @@ public class GameEngine {
 	public void newGame() {
 		currentState = GameState.createInitialState();
 		notifyListeners();
+
+		System.out.print("Threatened moves: ");
+		for (Move move : currentState.getThreatenedMoves()) {
+			System.out.print(move + " ");
+		}
+		System.out.println();
 	}
 
 	public GameState getCurrentState() {

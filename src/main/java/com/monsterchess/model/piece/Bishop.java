@@ -15,9 +15,15 @@ import java.util.List;
 public class Bishop extends Piece {
 
 	public List<Move> getThreatenedMoves(Square currentPosition, GameState gameState) {
-		return new LinkedList<>();
-	}
+		List<Move> moves = new LinkedList<>();
 
+		tryMoveOrCaptureUntilBlocking(moves, currentPosition, s -> s.getUp().getLeft(), gameState);
+		tryMoveOrCaptureUntilBlocking(moves, currentPosition, s -> s.getUp().getRight(), gameState);
+		tryMoveOrCaptureUntilBlocking(moves, currentPosition, s -> s.getDown().getLeft(), gameState);
+		tryMoveOrCaptureUntilBlocking(moves, currentPosition, s -> s.getDown().getRight(), gameState);
+
+		return moves;
+	}
 
 	public Bishop(Player player) {
 		super("B", player);

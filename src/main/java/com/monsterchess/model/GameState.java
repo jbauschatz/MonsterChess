@@ -84,7 +84,7 @@ public class GameState {
 		return squares.stream();
 	}
 
-	public Set<Move> getThreatenedMoves() {
+	public List<Move> getThreatenedMoves() {
 		return threatenedMoves;
 	}
 
@@ -92,7 +92,21 @@ public class GameState {
 		return this;
 	}
 
-	private GameState() {
+	/**
+	 * Place a piece at the given position.
+	 *
+	 * As this mutates the GameState, it must only be used in a very trusted context
+	 * like serialization or to prepare unit tests
+	 */
+	public void addPiece(Piece piece, Square position) {
+		pieces.add(piece);
+		piecePositions.put(piece, position);
+		board[position.getRank()][position.getFile()] = piece;
+
+		cacheThreatenedMoves();
+	}
+
+	public GameState() {
 		board = new Piece[8][8];
 		pieces = new LinkedList<>();
 		piecePositions = new HashMap<>();
@@ -103,24 +117,13 @@ public class GameState {
 	}
 
 	/**
-	 * Place a piece at the given position.
-	 *
-	 * As this mutates the GameState, it must remain private
-	 */
-	private void addPiece(Piece piece, Square position) {
-		pieces.add(piece);
-		piecePositions.put(piece, position);
-		board[position.getRank()][position.getFile()] = piece;
-	}
-
-	/**
 	 * Calculate all moves that are currently threatened by the moving player.
 	 *
 	 * This does not consider whether the moves are legal to make in terms of Check, etc.
 	 * It is simply the moves that each piece is intrinsically capable of.
 	 */
 	private void cacheThreatenedMoves() {
-		threatenedMoves = new HashSet<>();
+		threatenedMoves = new LinkedList<>();
 
 		pieces.stream()
 				.filter(piece -> piece.getPlayer() == playerToMove)
@@ -143,7 +146,7 @@ public class GameState {
 
 	private Player playerToMove;
 
-	private Set<Move> threatenedMoves;
+	private List<Move> threatenedMoves;
 
 	private int movesMade;
 }
