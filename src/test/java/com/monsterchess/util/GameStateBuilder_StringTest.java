@@ -20,8 +20,8 @@ public class GameStateBuilder_StringTest {
 				"[ ][ ][ ][ ][ ][ ][ ][ ] 4\n" +
 				"[ ][ ][ ][ ][ ][ ][ ][ ] 3\n" +
 				"[ ][ ][ ][P][P][P][ ][ ] 2\n" +
-				"[ ][ ][ ][ ][K][ ][ ][ ]\n" +
-				" a  b  c  d  e  f  g ";
+				"[ ][ ][ ][ ][K][ ][ ][ ] 1\n" +
+				" a  b  c  d  e  f  g  h";
 
 		GameStateBuilderArrayBacked<String> builder = new GameStateBuilder_String(expected);
 
