@@ -1,6 +1,8 @@
 # IntelliJ project files
 .idea
-monsterchess.iml
+*.iml
+*.ipr
+*.iws
 
 # Gradle and build artifacts
 .gradle
