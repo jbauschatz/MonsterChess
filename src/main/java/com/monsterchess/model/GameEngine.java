@@ -1,9 +1,3 @@
-/****************************************************************
- * Copyright (c) 2016 Health Innovation Technologies, Inc. All rights reserved.
- * <p>
- * This software is the confidential and proprietary information of
- * Health Innovation Technologies, Inc. ("Confidential Information").
- ****************************************************************/
 package com.monsterchess.model;
 
 import com.monsterchess.model.event.ChessEvent;
@@ -14,19 +8,15 @@ import com.monsterchess.player.GamePlayer;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
  */
 public class GameEngine {
 
-	public List<Move> getLegalMoves(Player player) {
-		if (player != currentState.getPlayerToMove()) {
-			return new LinkedList<>();
-		}
-
-		// TODO validate each of these based on the rules of Check, etc
-		return currentState.getThreatenedMoves();
+	public List<Move> getLegalMoves() {
+		return legalMoves;
 	}
 
 	public void newGame() {
@@ -44,9 +34,15 @@ public class GameEngine {
 
 	public void playGame() {
 		while (true) {
-			// TODO - Calculate and cache legal moves for the current player
+			System.out.println(currentState.getTurnCycle());
 
-			// TODO - evaluate Check or Checkmate
+			cacheLegalMoves();
+
+			// TODO - evaluate Check/Checkmate/Stalemate, possibly end the game
+			if (legalMoves.isEmpty()) {
+				System.out.println("Game Over (no legal moves remain)");
+				break;
+			}
 
 			GamePlayer player = currentState.getPlayerToMove() == Player.WHITE
 					? whitePlayer
@@ -73,12 +69,96 @@ public class GameEngine {
 		currentState = currentState.makeMove(move);
 	}
 
+	private void cacheLegalMoves() {
+		List<Move> newLegalMoves = new LinkedList<>();
+
+		List<Move> possibleMoves = currentState.getThreatenedMoves();
+
+		// White's first move in the cycle
+		if (currentState.getMoveNumber() % 3 == 0) {
+			for (Move move : possibleMoves) {
+				boolean everyMoveResultsInCheck = true; // If EVERY one of White's next moves puts White in Check
+
+				GameState afterFirstMove = currentState.makeMove(move);
+				List<Move> whiteSecondMoves = currentState.getThreatenedMoves(Player.WHITE)
+						.collect(Collectors.toList());
+				for (Move whiteSecondMove : whiteSecondMoves) {
+					GameState afterSecondMove = afterFirstMove.makeMove(whiteSecondMove);
+					boolean whiteIsInCheck = afterSecondMove.isThreatened(afterSecondMove.getWhiteKing());
+
+					// If this move doesn't immediately put White in check it is legal
+					if (!whiteIsInCheck) {
+						everyMoveResultsInCheck = false;
+						break;
+					}
+				}
+
+				if (!everyMoveResultsInCheck) {
+					newLegalMoves.add(move);
+				} else {
+					System.out.println("[CHECK] " + move + " would put give White no safe second move.");
+				}
+			}
+		}
+
+		// White's second move in the cycle
+		if (currentState.getMoveNumber() % 3 == 1) {
+			for (Move move : possibleMoves) {
+				GameState afterWhiteMoves = currentState.makeMove(move);
+				boolean whiteIsInCheck = afterWhiteMoves.isThreatened(afterWhiteMoves.getWhiteKing());
+
+				// If this move doesn't immediately put White in check it is legal
+				if (!whiteIsInCheck) {
+					newLegalMoves.add(move);
+				} else {
+					System.out.println("[CHECK] " + move + " would put White in check.");
+				}
+			}
+		}
+
+		// Black's move
+		else {
+			for (Move blackMove : currentState.getThreatenedMoves()) {
+				GameState afterBlackMove = currentState.makeMove(blackMove);
+
+				boolean blackInCheck = afterBlackMove.isThreatened(afterBlackMove.getBlackKing());
+				if (blackInCheck) {
+					System.out.println("[CHECK] " + blackMove + " would put Black in Check (immediately)");
+				} else {
+					boolean someWhiteResponseGivesCheck = false;
+
+					/* TODO Unlike other tests for Check, this must ONLY consider legal first moves for White.
+					White is not allowed to put himself in unresolved check on his first move and then end the game there.
+					Or IS he? The legality of this needs to be considered */
+					List<Move> whiteResponses = afterBlackMove.getThreatenedMoves(Player.WHITE).collect(Collectors.toList());
+					for (Move whiteResponse : whiteResponses) {
+						GameState afterWhiteResponse = afterBlackMove.makeMove(whiteResponse);
+						boolean blackInDelayedCheck = afterWhiteResponse.isThreatened(afterWhiteResponse.getBlackKing());
+						if (blackInDelayedCheck) {
+							someWhiteResponseGivesCheck = true;
+							System.out.println("[CHECK] " + blackMove + " would put Black in Check (via White playing " + whiteResponse + ")");
+							break;
+						}
+					}
+
+					if (!someWhiteResponseGivesCheck) {
+						newLegalMoves.add(blackMove);
+					}
+				}
+			}
+		}
+
+		legalMoves = newLegalMoves;
+	}
+
 	private void notifyListeners(ChessEvent event) {
-		for (ChessEventListener listener : listeners)
+		for (ChessEventListener listener : listeners) {
 			listener.processEvent(event);
+		}
 	}
 
 	private GameState currentState;
+	private List<Move> legalMoves;
 	private List<ChessEventListener> listeners;
 	private GamePlayer whitePlayer;
 	private GamePlayer blackPlayer;

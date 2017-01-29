@@ -1,12 +1,12 @@
 
 package com.monsterchess.model;
 
-import com.monsterchess.model.move.BasicMove;
-import com.monsterchess.model.move.Capture;
-import com.monsterchess.model.move.Move;
+import com.monsterchess.model.move.*;
 import com.monsterchess.model.piece.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -69,6 +69,10 @@ public class GameState {
 		return playerToMove;
 	}
 
+	public TurnCycle getTurnCycle() {
+		return turnCycle;
+	}
+
 	public int getMoveNumber() {
 		return movesMade;
 	}
@@ -82,6 +86,14 @@ public class GameState {
 	 */
 	public Piece getPiece(Square square) {
 		return board[square.getRank()][square.getFile()];
+	}
+
+	public King getWhiteKing() {
+		return whiteKing;
+	}
+
+	public King getBlackKing() {
+		return blackKing;
 	}
 
 	public Square getPosition(Piece piece) {
@@ -112,6 +124,24 @@ public class GameState {
 		return threatenedMoves;
 	}
 
+	public Stream<Move> getThreatenedMoves(Player player) {
+		return pieces.stream()
+				.filter(piece -> piece.getPlayer() == player)
+				.flatMap(piece -> getThreatenedMoves().stream());
+	}
+
+	public boolean isThreatened(Piece piece) {
+		Square piecePosition = piecePositions.get(piece);
+
+		Stream<Move> possibleThreats = piece.getPlayer() == Player.WHITE
+				? getThreatenedMoves(Player.BLACK)
+				: getThreatenedMoves(Player.WHITE);
+
+		return possibleThreats.filter(m -> m.getOperativeSquare().equals(piecePosition))
+				.findAny()
+				.isPresent();
+	}
+
 	public GameState makeMove(Move move) {
 		return new GameState(this, move);
 	}
@@ -127,6 +157,14 @@ public class GameState {
 		piecePositions.put(piece, position);
 		board[position.getRank()][position.getFile()] = piece;
 
+		if (piece instanceof King) {
+			if (piece.getPlayer() == Player.WHITE) {
+				whiteKing = (King)piece;
+			} else {
+				blackKing = (King)piece;
+			}
+		}
+
 		cacheThreatenedMoves();
 	}
 
@@ -136,6 +174,7 @@ public class GameState {
 		piecePositions = new HashMap<>();
 		movesMade = 0;
 		playerToMove = Player.WHITE;
+		turnCycle = TurnCycle.WHITE_FIRST_MOVE;
 
 		cacheThreatenedMoves();
 	}
@@ -149,10 +188,21 @@ public class GameState {
 			}
 		}
 		piecePositions = new HashMap<>(parent.piecePositions);
+		whiteKing = parent.whiteKing;
+		blackKing = parent.blackKing;
 
 		// Derive state specific to this position
 		movesMade = parent.movesMade + 1;
-		playerToMove = movesMade % 3 == 2 ? Player.BLACK : Player.WHITE;
+		if (movesMade % 3 == 0) {
+			playerToMove = Player.WHITE;
+			turnCycle = TurnCycle.WHITE_FIRST_MOVE;
+		} else if (movesMade % 3 == 1) {
+			playerToMove = Player.WHITE;
+			turnCycle = TurnCycle.WHITE_SECOND_MOVE;
+		} else {
+			playerToMove = Player.BLACK;
+			turnCycle = TurnCycle.BLACK_MOVE;
+		}
 
 		// Execute the side effects of the originating move
 		if (move instanceof BasicMove) {
@@ -174,6 +224,44 @@ public class GameState {
 			piecePositions.remove(capture.getCapturedPiece());
 			pieces = new LinkedList<>(parent.pieces);
 			pieces.remove(capture.getCapturedPiece());
+		} else if (move instanceof CaptureWithPromotion) {
+			CaptureWithPromotion capture = (CaptureWithPromotion) move;
+
+			pieces = new LinkedList<>(parent.pieces);
+
+			// REMOVE the capturing pawn
+			piecePositions.remove(capture.getMovingPiece());
+			pieces.remove(capture.getMovingPiece());
+			board[capture.getFrom().getRank()][capture.getFrom().getFile()] = null;
+
+			// PLACE a new Queen
+			// TODO - it's not always a queen
+			Queen queen = new Queen(capture.getMovingPiece().getPlayer());
+			pieces.add(queen);
+			piecePositions.put(queen, move.getOperativeSquare());
+			board[capture.getOperativeSquare().getRank()][capture.getOperativeSquare().getFile()] = queen;
+
+			// Remove the captured piece
+			piecePositions.remove(capture.getCapturedPiece());
+			pieces.remove(capture.getCapturedPiece());
+		} else if (move instanceof BasicMoveWithPromotion) {
+			BasicMoveWithPromotion promote = (BasicMoveWithPromotion) move;
+
+			pieces = new LinkedList<>(parent.pieces);
+
+			// REMOVE the moving pawn
+			piecePositions.remove(promote.getMovingPiece());
+			pieces.remove(promote.getMovingPiece());
+			board[promote.getFrom().getRank()][promote.getFrom().getFile()] = null;
+
+			// PLACE a new Queen
+			// TODO - it's not always a queen
+			Queen queen = new Queen(promote.getMovingPiece().getPlayer());
+			piecePositions.put(queen, move.getOperativeSquare());
+			pieces.add(queen);
+			board[promote.getOperativeSquare().getRank()][promote.getOperativeSquare().getFile()] = queen;
+		} else {
+			throw new IllegalArgumentException("Unhandled move: " + move);
 		}
 
 		cacheThreatenedMoves();
@@ -212,4 +300,10 @@ public class GameState {
 	private List<Move> threatenedMoves;
 
 	private int movesMade;
+
+	private TurnCycle turnCycle;
+
+	private King whiteKing;
+
+	private King blackKing;
 }

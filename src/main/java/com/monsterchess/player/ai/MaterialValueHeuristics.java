@@ -1,9 +1,3 @@
-/****************************************************************
- * Copyright (c) 2016 Health Innovation Technologies, Inc. All rights reserved.
- * <p>
- * This software is the confidential and proprietary information of
- * Health Innovation Technologies, Inc. ("Confidential Information").
- ****************************************************************/
 package com.monsterchess.player.ai;
 
 import com.monsterchess.model.GameState;
@@ -41,7 +35,7 @@ public class MaterialValueHeuristics implements Heuristics {
 
 	public MaterialValueHeuristics() {
 		whitePieceValues = new HashMap<Piece.Type, Double>(){{
-			put(Piece.Type.KING, 0d);
+			put(Piece.Type.KING, 1000d);
 			put(Piece.Type.QUEEN, 24d);
 			put(Piece.Type.ROOK, 18d);
 			put(Piece.Type.BISHOP, 15d);
@@ -49,7 +43,7 @@ public class MaterialValueHeuristics implements Heuristics {
 			put(Piece.Type.PAWN, 13d);
 		}};
 		blackPieceValues = new HashMap<Piece.Type, Double>(){{
-			put(Piece.Type.KING, 0d);
+			put(Piece.Type.KING, -1000d);
 			put(Piece.Type.QUEEN, -9d);
 			put(Piece.Type.ROOK, -5d);
 			put(Piece.Type.BISHOP, -3d);

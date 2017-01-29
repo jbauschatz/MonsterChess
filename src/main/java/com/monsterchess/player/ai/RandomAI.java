@@ -25,7 +25,7 @@ public class RandomAI implements GamePlayer {
 
 	@Override
 	public Move getMove(GameEngine engine, Player player) {
-		List<Move> legalMoves = engine.getLegalMoves(player);
+		List<Move> legalMoves = engine.getLegalMoves();
 
 		try {
 			Thread.sleep(1000);

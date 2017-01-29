@@ -30,18 +30,20 @@ public class GreedyAI implements GamePlayer {
 		}
 
 		GameState currentState = engine.getCurrentState();
-		double currentValue = heuristics.evaluate(currentState);
-		System.out.println("   [" + getName() + "] heuristics evaluate current position at " + currentValue);
 
 		boolean maximizing = player == Player.WHITE;
-		double maxValue = -1000d;
+		double maxValue = -100000d;
 		Move maxMove = null;
-		double minValue = 1000d;
+		double minValue = 100000d;
 		Move minMove = null;
 
-		for (Move move : engine.getLegalMoves(player)) {
+		for (Move move : engine.getLegalMoves()) {
 			GameState stateAfterMove = currentState.makeMove(move);
 			double value = heuristics.evaluate(stateAfterMove);
+
+			// Add some entropy, +/1 1 point
+			value += Math.random()*3 - 1.5;
+
 			if (value >= maxValue) {
 				maxValue = value;
 				maxMove = move;
@@ -53,10 +55,8 @@ public class GreedyAI implements GamePlayer {
 		}
 
 		if (maximizing) {
-			System.out.println("   [" + getName() + "] selects " + maxMove + " for its maximal value " + maxValue);
 			return maxMove;
 		} else {
-			System.out.println("   [" + getName() + "] selects " + minMove + " for its minimal value " + minValue);
 			return minMove;
 		}
 	}
