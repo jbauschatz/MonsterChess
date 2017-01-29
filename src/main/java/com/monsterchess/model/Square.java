@@ -66,6 +66,18 @@ public class Square {
 	}
 
 	/**
+	 * Standard chess notation
+	 * @param file a character 'a' - 'h'
+	 * @param rank a number 1 - 8
+	 */
+	public Square(char file, char rank) {
+		this.rank = rank - '1';
+		this.file = file - 'a';
+
+		notation = file + "" + rank;
+	}
+
+	/**
 	 * 0-indexed, where A1 is 0,0
 	 */
 	public Square(int rank, int file) {
