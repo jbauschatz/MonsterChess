@@ -1,21 +1,17 @@
-/****************************************************************
- * Copyright (c) 2016 Health Innovation Technologies, Inc. All rights reserved.
- * <p>
- * This software is the confidential and proprietary information of
- * Health Innovation Technologies, Inc. ("Confidential Information").
- ****************************************************************/
-package com.monsterchess.player.ai;
+package com.monsterchess.player;
 
 import com.monsterchess.model.GameEngine;
 import com.monsterchess.model.GameState;
 import com.monsterchess.model.Player;
 import com.monsterchess.model.move.Move;
 import com.monsterchess.player.GamePlayer;
+import com.monsterchess.player.ai.Heuristics;
+import com.monsterchess.player.ai.MaterialAndPositionalHeuristics;
 
 /**
  *
  */
-public class GreedyAI implements GamePlayer {
+public class GreedyPlayer implements GamePlayer {
 	@Override
 	public String getName() {
 		return "Greedy AI";
@@ -61,7 +57,7 @@ public class GreedyAI implements GamePlayer {
 		}
 	}
 
-	public GreedyAI() {
+	public GreedyPlayer() {
 		heuristics = new MaterialAndPositionalHeuristics();
 	}
 
