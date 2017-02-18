@@ -2,7 +2,7 @@
 package com.monsterchess.view;
 
 import com.monsterchess.model.GameEngine;
-import com.monsterchess.model.GameState;
+import com.monsterchess.model.Square;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,10 +12,22 @@ import java.awt.*;
  */
 public class GameWindow extends JFrame {
 
+	public void addSquareClickListener(SquareClickListener listener) {
+		boardView.addSquareClickListener(listener);
+	}
+
+	public void highlightSquare(Square square) {
+		boardView.highlightSquare(square);
+	}
+
+	public void clearHighlights() {
+		boardView.clearHighlights();
+	}
+
 	public GameWindow(GameEngine engine) {
 		setLayout(new BorderLayout());
 
-		BoardView boardView = new BoardView(engine);
+		boardView = new BoardView(engine);
 		add(boardView, BorderLayout.CENTER);
 
 		GameHistory history = new GameHistory(engine);
@@ -27,4 +39,6 @@ public class GameWindow extends JFrame {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
+
+	private BoardView boardView;
 }

@@ -11,8 +11,12 @@ import com.monsterchess.player.MinMaxPlayer;
 public class Main {
 
 	public static void main(String[] args) {
-		GameEngine engine = new GameEngine(new MinMaxPlayer(4), new MinMaxPlayer(4));
-		new GameWindow(engine);
+		GameEngine engine = new GameEngine();
+
+		GameWindow window = new GameWindow(engine);
+
+		engine.setWhitePlayer(new UserInputPlayer(engine, window));
+		engine.setBlackPlayer(new MinMaxPlayer(5));
 
 		engine.playGame();
 	}
