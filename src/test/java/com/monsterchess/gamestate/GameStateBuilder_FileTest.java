@@ -28,17 +28,6 @@ public class GameStateBuilder_FileTest {
 
 		GameStateSerializer<Path> pathSerializer = new GameStateSerializer_Path(Paths.get("src/test/resources"));
 
-		String stringInitialState =
-				"[r][n][b][q][k][b][n][r] 8\n" +
-				"[p][p][p][p][p][p][p][p] 7\n" +
-				"[ ][ ][ ][ ][ ][ ][ ][ ] 6\n" +
-				"[ ][ ][ ][ ][ ][ ][ ][ ] 5\n" +
-				"[ ][ ][ ][ ][ ][ ][ ][ ] 4\n" +
-				"[ ][ ][ ][ ][ ][ ][ ][ ] 3\n" +
-				"[ ][ ][ ][P][P][P][ ][ ] 2\n" +
-				"[ ][ ][ ][ ][K][ ][ ][ ] 1\n" +
-				" a  b  c  d  e  f  g  h";
-
 		GameState expectedGameState = GameState.createInitialState();
 
 		Path generatedPath = null;
@@ -47,7 +36,14 @@ public class GameStateBuilder_FileTest {
 
 			GameState loadedGameState = pathSerializer.from(generatedPath.getFileName());
 
-			Pattern p = Pattern.compile("src\\/test\\/resources\\/[\\d]+\\.mc");
+			// Double-escaped pattern for matching either kind of slash
+			String fileSeparatorPattern = "[\\\\\\/]";
+
+			Pattern p = Pattern.compile(
+					"src" + fileSeparatorPattern
+					+ "test" + fileSeparatorPattern
+					+ "resources" + fileSeparatorPattern
+					+ "\\d+\\.mc");
 			Matcher m = p.matcher(generatedPath.toString());
 
 			assertThat("Check that generatedPath matches expected format.",
