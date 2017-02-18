@@ -2,7 +2,6 @@
 package com.monsterchess.view;
 
 import com.monsterchess.model.GameEngine;
-import com.monsterchess.player.GreedyPlayer;
 import com.monsterchess.player.MinMaxPlayer;
 
 import javax.swing.*;

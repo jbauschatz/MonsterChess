@@ -54,7 +54,8 @@ public class GameStateSerializer_String implements GameStateSerializer<String> {
 
 		RankAndFile.startTopLeft((rank,file) -> {
 			m.find();
-			pieceMap.getOrDefault(m.group().charAt(1), Optional.empty())
+			pieceMap.getOrDefault(m.group().charAt(1), Optional::empty)
+				.get()
 				.ifPresent(piece ->
 					gameState.addPiece(
 						piece,
@@ -66,20 +67,20 @@ public class GameStateSerializer_String implements GameStateSerializer<String> {
 
 	private static Pattern CHESS_PATTERN = Pattern.compile("\\[([ prbnkqPRBNKQ])\\]");
 
-	private static Map<Character,Optional<Piece>> pieceMap = new HashMap<>();
+	private static Map<Character, Supplier<Optional<Piece>>> pieceMap = new HashMap<>();
 
 	static {
-		pieceMap.put('b', of(new Bishop(Player.BLACK)));
-		pieceMap.put('B', of(new Bishop(Player.WHITE)));
-		pieceMap.put('r', of(new Rook(Player.BLACK)));
-		pieceMap.put('R', of(new Rook(Player.WHITE)));
-		pieceMap.put('q', of(new Queen(Player.BLACK)));
-		pieceMap.put('Q', of(new Queen(Player.WHITE)));
-		pieceMap.put('P', of(new Pawn(Player.WHITE)));
-		pieceMap.put('p', of(new Pawn(Player.BLACK)));
-		pieceMap.put('n', of(new Knight(Player.BLACK)));
-		pieceMap.put('N', of(new Knight(Player.WHITE)));
-		pieceMap.put('k', of(new King(Player.BLACK)));
-		pieceMap.put('K', of(new King(Player.WHITE)));
+		pieceMap.put('b', () -> of(new Bishop(Player.BLACK)));
+		pieceMap.put('B', () -> of(new Bishop(Player.WHITE)));
+		pieceMap.put('r', () -> of(new Rook(Player.BLACK)));
+		pieceMap.put('R', () -> of(new Rook(Player.WHITE)));
+		pieceMap.put('q', () -> of(new Queen(Player.BLACK)));
+		pieceMap.put('Q', () -> of(new Queen(Player.WHITE)));
+		pieceMap.put('P', () -> of(new Pawn(Player.WHITE)));
+		pieceMap.put('p', () -> of(new Pawn(Player.BLACK)));
+		pieceMap.put('n', () -> of(new Knight(Player.BLACK)));
+		pieceMap.put('N', () -> of(new Knight(Player.WHITE)));
+		pieceMap.put('k', () -> of(new King(Player.BLACK)));
+		pieceMap.put('K', () -> of(new King(Player.WHITE)));
 	}
 }
