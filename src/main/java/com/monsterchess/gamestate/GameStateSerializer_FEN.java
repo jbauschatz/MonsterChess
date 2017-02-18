@@ -2,6 +2,7 @@ package com.monsterchess.gamestate;
 
 import com.monsterchess.model.GameState;
 import com.monsterchess.model.Player;
+import com.monsterchess.model.RankAndFile;
 import com.monsterchess.model.Square;
 import com.monsterchess.model.piece.Piece;
 
@@ -57,7 +58,7 @@ public class GameStateSerializer_FEN implements GameStateSerializer<String> {
 		final int[] counter = new int[1];
 		counter[0] = 0;
 
-		RankAndFile.startTopLeft((rank,file) -> {
+		RankAndFile.startTopLeft((rank, file) -> {
 			Piece piece = gameState.getPiece(new Square(rank,file));
 			if(piece == null) {
 				counter[0] = counter[0] + 1;

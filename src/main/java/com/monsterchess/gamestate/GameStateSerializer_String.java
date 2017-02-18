@@ -1,16 +1,15 @@
 package com.monsterchess.gamestate;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import com.monsterchess.model.GameState;
 import com.monsterchess.model.Player;
+import com.monsterchess.model.RankAndFile;
 import com.monsterchess.model.Square;
 import com.monsterchess.model.piece.Bishop;
 import com.monsterchess.model.piece.King;
@@ -29,7 +28,7 @@ public class GameStateSerializer_String implements GameStateSerializer<String> {
 
 		StringBuilder sb = new StringBuilder();
 
-		RankAndFile.startTopLeft((rank,file) -> {
+		RankAndFile.startTopLeft((rank, file) -> {
 			Piece piece = gameState.getPiece(new Square(rank,file));
 			if(piece != null){
 				sb.append(String.format("[%s]",piece.getShorthandFEN()));

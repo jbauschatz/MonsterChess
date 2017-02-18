@@ -6,6 +6,7 @@ import com.monsterchess.model.Square;
 import com.monsterchess.model.move.BasicMove;
 import com.monsterchess.model.move.Capture;
 import com.monsterchess.model.move.Move;
+import com.monsterchess.model.move.MoveFactory;
 import com.monsterchess.model.piece.Piece;
 import com.monsterchess.player.GamePlayer;
 
@@ -49,18 +50,18 @@ public class UserInputPlayer implements GamePlayer {
 		List<Move> legalMoves = engine.getLegalMoves();
 		Player player = engine.getCurrentState().getPlayerToMove(); // TODO pass this as class parameter
 
+		window.clearHighlights();
+
 		if (selectedPiece == null) {
 			Piece clickedPiece = engine.getCurrentState().getPiece(clickedSquare);
 			if (clickedPiece != null && clickedPiece.getPlayer() == player) {
 				selectedSquare = clickedSquare;
 				selectedPiece = clickedPiece;
 
-				window.clearHighlights();
 				window.highlightSquare(selectedSquare);
 			} else {
 				selectedSquare = null;
 				selectedPiece = null;
-				window.clearHighlights();
 			}
 		} else {
 			Piece clickedPiece = engine.getCurrentState().getPiece(clickedSquare);
@@ -68,7 +69,7 @@ public class UserInputPlayer implements GamePlayer {
 				// TODO look for promotion moves
 
 				// Attempt to move
-				Move move = new BasicMove(selectedPiece, selectedSquare, clickedSquare);
+				Move move = MoveFactory.buildMove(selectedSquare, clickedSquare, engine.getCurrentState());
 				if (legalMoves.contains(move)) {
 					moveInput = move;
 				}
@@ -76,30 +77,24 @@ public class UserInputPlayer implements GamePlayer {
 				// Deselect
 				selectedPiece = null;
 				selectedSquare = null;
-				window.clearHighlights();
 			} else if (clickedPiece == selectedPiece) {
 				// Deselect
 				selectedPiece = null;
 				selectedSquare = null;
-				window.clearHighlights();
 			} else if (clickedPiece.getPlayer() == player) {
 				// Select the new piece
 				selectedSquare = clickedSquare;
 				selectedPiece = clickedPiece;
-				window.clearHighlights();
 				window.highlightSquare(selectedSquare);
 			} else {
-				// TODO identify specific kinds of captures, like promotion captures
-
-				Capture capture = new Capture(selectedPiece, clickedPiece, selectedSquare, clickedSquare);
-				if (legalMoves.contains(capture)) {
-					moveInput = capture;
+				Move move = MoveFactory.buildMove(selectedSquare, clickedSquare, engine.getCurrentState());
+				if (legalMoves.contains(move)) {
+					moveInput = move;
 				}
 
 				// Deselect
 				selectedPiece = null;
 				selectedSquare = null;
-				window.clearHighlights();
 			}
 		}
 	}
