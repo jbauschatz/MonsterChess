@@ -28,6 +28,16 @@ public abstract class Piece {
 		return shorthand;
 	}
 
+	/**
+	 * A bit of Forsyth–Edwards Notation
+	 * White pieces are designated using upper-case letters ("PNBRQK")
+	 * Black pieces use lowercase ("pnbrqk")
+	 * @return string
+	 */
+	public String getShorthandFEN(){
+		return Player.BLACK == player ? shorthand.toLowerCase() : shorthand;
+	}
+
 	public Player getPlayer() {
 		return player;
 	}

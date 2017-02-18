@@ -1,11 +1,15 @@
 
 package com.monsterchess.model;
 
+import com.monsterchess.gamestate.GameStateSerializer;
+import com.monsterchess.gamestate.GameStateSerializer_Path;
 import com.monsterchess.model.move.BasicMove;
 import com.monsterchess.model.move.Capture;
 import com.monsterchess.model.move.Move;
 import com.monsterchess.model.piece.*;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -18,38 +22,8 @@ public class GameState {
 	 * Factory method to produce a valid initial state of the game
 	 */
 	public static GameState createInitialState() {
-		GameState state = new GameState();
-
-		// Black pawns
-		for (int file = 0; file<8; ++file)
-			state.addPiece(new Pawn(Player.BLACK), new Square(6, file));
-
-		// Black rooks
-		state.addPiece(new Rook(Player.BLACK), new Square(7, 0));
-		state.addPiece(new Rook(Player.BLACK), new Square(7, 7));
-
-		// Black knights
-		state.addPiece(new Knight(Player.BLACK), new Square(7, 1));
-		state.addPiece(new Knight(Player.BLACK), new Square(7, 6));
-
-		// Black bishops
-		state.addPiece(new Bishop(Player.BLACK), new Square(7, 2));
-		state.addPiece(new Bishop(Player.BLACK), new Square(7, 5));
-
-		// Black queen
-		state.addPiece(new Queen(Player.BLACK), new Square(7, 3));
-
-		// Black king
-		state.addPiece(new King(Player.BLACK), new Square(7, 4));
-
-		// White pawns
-		for (int file = 3; file<6; ++file)
-			state.addPiece(new Pawn(Player.WHITE), new Square(1, file));
-
-		// White king
-		state.addPiece(new King(Player.WHITE), new Square(0, 4));
-
-		return state;
+		GameStateSerializer<Path> serializer = new GameStateSerializer_Path(Paths.get("src/main/resources"));
+		return serializer.from(Paths.get("initial-monster-chess.mc"));
 	}
 
 	/**
