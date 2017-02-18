@@ -1,20 +1,18 @@
 
 package com.monsterchess.model;
 
-import com.monsterchess.model.move.*;
 import com.monsterchess.gamestate.GameStateSerializer;
 import com.monsterchess.gamestate.GameStateSerializer_Path;
-import com.monsterchess.model.move.BasicMove;
-import com.monsterchess.model.move.Capture;
-import com.monsterchess.model.move.Move;
-import com.monsterchess.model.piece.*;
+import com.monsterchess.model.move.*;
+import com.monsterchess.model.piece.King;
+import com.monsterchess.model.piece.Piece;
+import com.monsterchess.model.piece.Queen;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
 import java.util.stream.Stream;
 
 /**
