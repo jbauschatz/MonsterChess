@@ -15,6 +15,14 @@ import java.util.stream.Collectors;
  */
 public class GameEngine {
 
+	public void setWhitePlayer(GamePlayer player) {
+		whitePlayer = player;
+	}
+
+	public void setBlackPlayer(GamePlayer player) {
+		blackPlayer = player;
+	}
+
 	public List<Move> getLegalMoves() {
 		return legalMoves;
 	}
@@ -33,6 +41,14 @@ public class GameEngine {
 	}
 
 	public void playGame() {
+		if (whitePlayer == null) {
+			throw new IllegalStateException("White Player not set");
+		}
+
+		if (blackPlayer == null) {
+			throw new IllegalStateException("Black Player not set");
+		}
+
 		while (true) {
 			System.out.println(currentState.getTurnCycle());
 
@@ -56,10 +72,7 @@ public class GameEngine {
 		}
 	}
 
-	public GameEngine(GamePlayer whitePlayer, GamePlayer blackPlayer) {
-		this.whitePlayer = whitePlayer;
-		this.blackPlayer = blackPlayer;
-
+	public GameEngine() {
 		listeners = new LinkedList<>();
 
 		newGame();

@@ -20,6 +20,7 @@ public class GameHistory extends JPanel {
 		engine.addListener(this::processEvent);
 
 		setPreferredSize(new Dimension(200, 800));
+		setAutoscrolls(true);
 
 		turnsView = new JList<>(turns);
 		turnsView.setPreferredSize(new Dimension(180, 800));
@@ -73,6 +74,7 @@ public class GameHistory extends JPanel {
 					++numTurns;
 					latestTurn.turnNumber = numTurns;
 					turns.addElement(latestTurn);
+					turnsView.setSelectedValue(latestTurn, true);
 				}
 			}
 		});

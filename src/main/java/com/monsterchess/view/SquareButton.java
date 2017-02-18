@@ -63,6 +63,8 @@ public class SquareButton extends JButton {
 		else
 			color = new java.awt.Color(214, 200, 174);
 		setBackground(color);
+		setOpaque(true);
+		setBorderPainted(false);
 
 		try {
 			InputStream stream = getClass().getResourceAsStream("/CASEFONT.TTF");
